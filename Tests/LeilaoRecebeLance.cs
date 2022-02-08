@@ -14,7 +14,7 @@ namespace Tests
         {
             var leilao = new Leilao("Van Gogh");
             leilao.IniciaPregao();
-            LeilaoTestUtils.realizaLancesIntercaladosComDoisInteressados(leilao, valorLances);
+            LeilaoTestUtils.RealizaLancesIntercaladosComDoisInteressados(leilao, valorLances);
             leilao.TerminaPregao();
             
             Assert.Equal(valorEsperado, leilao.Ganhador.Valor);
