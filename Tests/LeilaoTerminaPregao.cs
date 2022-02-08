@@ -14,15 +14,15 @@ namespace Tests
         {
             var leilao = new Leilao("Pç. Teste");
             var fulano = new Interessada("Fulano", leilao);
-            var ciclano = new Interessada("Ciclano",leilao);
-            
+            var ciclano = new Interessada("Ciclano", leilao);
+
             leilao.IniciaPregao();
 
-            for (int i = 0; i < valoresLances.Length; i++)
+            for (int i = 1; i < valoresLances.Length; i++)
             {
                 DefineLancesIntercalados(leilao, fulano, ciclano, valoresLances[i], i);
 
-                if (qtdLancesEsperados == leilao.Lances.Count())
+                if (qtdLancesEsperados == i)
                     leilao.TerminaPregao();
             }
 
@@ -37,14 +37,29 @@ namespace Tests
             Assert.Equal("Para terminar o pregão é necessário iniciá-lo", exception.Message);
         }
 
-        private void DefineLancesIntercalados(Leilao leilao, Interessada cliente1, Interessada cliente2, double valor, int indice)
+        [Theory]
+        [InlineData(1200, 1250, new double[] {700, 800, 1250, 1400})]
+        public void GanhadorPossuiValorSuperiorMaisProximoDoValorDestino(double valorDestino, double valorEsperado,
+            double[] ofertas)
+        {
+            var leilao = new Leilao("Teste", valorDestino);
+            
+            leilao.IniciaPregao();
+            LeilaoTestUtils.RealizaLancesIntercaladosComDoisInteressados(leilao, ofertas);
+            leilao.TerminaPregao();
+            
+            Assert.Equal(valorEsperado, leilao.Ganhador.Valor);
+        }
+
+        private void DefineLancesIntercalados(Leilao leilao, Interessada cliente1, Interessada cliente2, double valor,
+            int indice)
         {
             if (indice % 2 == 0)
             {
                 leilao.RecebeLance(cliente1, valor);
                 return;
             }
-            
+
             leilao.RecebeLance(cliente2, valor);
         }
     }

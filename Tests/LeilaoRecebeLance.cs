@@ -25,6 +25,7 @@ namespace Tests
         {
             var leilao = new Leilao("Van Gogh");
             
+            leilao.IniciaPregao();
             leilao.TerminaPregao();
             
             Assert.Null(leilao.Ganhador.Cliente);
