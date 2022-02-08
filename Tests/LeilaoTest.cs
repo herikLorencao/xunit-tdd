@@ -5,34 +5,33 @@ namespace Tests
 {
     public class LeilaoTest
     {
-        [Fact]
-        public void LeilaoComVariosInteressados()
+        [Theory]
+        [InlineData(1200, new double[] { 800, 900, 1000, 1200 })]
+        [InlineData(1000, new double[] { 800, 900, 1000, 990 })]
+        [InlineData(800, new double[] { 800 })]
+        public void LeilaoComVariosLances(double valorEsperado, double[] valorLances)
         {
             var leilao = new Leilao("Van Gogh");
             var fulano = new Interessada("Fulano", leilao);
-            var maria = new Interessada("Maria", leilao);
 
-            leilao.RecebeLance(fulano, 700);
-            leilao.RecebeLance(maria, 800);
-            leilao.RecebeLance(fulano, 1000);
-            leilao.RecebeLance(maria, 990);
+            foreach (var valorLance in valorLances)
+            {
+                leilao.RecebeLance(fulano, valorLance);
+            }
 
             leilao.TerminaPregao();
             
-            Assert.Equal(1000, leilao.Ganhador.Valor);
+            Assert.Equal(valorEsperado, leilao.Ganhador.Valor);
         }
         
         [Fact]
-        public void LeilaoComUmInteressado()
+        public void LeilaoSemLances()
         {
             var leilao = new Leilao("Van Gogh");
-            var fulano = new Interessada("Fulano", leilao);
-            
-            leilao.RecebeLance(fulano, 700);
             
             leilao.TerminaPregao();
             
-            Assert.Equal(700, leilao.Ganhador.Valor);
+            Assert.Null(leilao.Ganhador.Cliente);
         }
     }
 }
