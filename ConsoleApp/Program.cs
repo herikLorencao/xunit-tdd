@@ -1,5 +1,6 @@
 ﻿using System;
 using Alura.LeilaoOnline.Core;
+using Alura.LeilaoOnline.Core.Modalidades;
 
 namespace ConsoleApp
 {
@@ -7,7 +8,8 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            var leilao = new Leilao("Van Gogh");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Van Gogh", modalidade);
             var fulano = new Interessada("Fulano", leilao);
             var maria = new Interessada("Maria", leilao);
 

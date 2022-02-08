@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Alura.LeilaoOnline.Core;
+using Alura.LeilaoOnline.Core.Modalidades;
 using Xunit;
 
 namespace Tests
@@ -12,7 +13,8 @@ namespace Tests
         [InlineData(4, new double[] {100, 200, 300, 400, 600})]
         public void DeveriaNaoAdicionarLancesAposTermino(int qtdLancesEsperados, double[] valoresLances)
         {
-            var leilao = new Leilao("Pç. Teste");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Pç. Teste", modalidade);
             var fulano = new Interessada("Fulano", leilao);
             var ciclano = new Interessada("Ciclano", leilao);
 
@@ -32,7 +34,8 @@ namespace Tests
         [Fact]
         public void LancaInvalidOperationExceptionQuandoPregaoNaoIniciado()
         {
-            var leilao = new Leilao("Teste");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Teste", modalidade);
             var exception = Assert.Throws<InvalidOperationException>(() => leilao.TerminaPregao());
             Assert.Equal("Para terminar o pregão é necessário iniciá-lo", exception.Message);
         }
@@ -42,12 +45,13 @@ namespace Tests
         public void GanhadorPossuiValorSuperiorMaisProximoDoValorDestino(double valorDestino, double valorEsperado,
             double[] ofertas)
         {
-            var leilao = new Leilao("Teste", valorDestino);
-            
+            var modalidade = new ValorSuperiorMaisProximo(valorDestino);
+            var leilao = new Leilao("Teste", modalidade);
+
             leilao.IniciaPregao();
             LeilaoTestUtils.RealizaLancesIntercaladosComDoisInteressados(leilao, ofertas);
             leilao.TerminaPregao();
-            
+
             Assert.Equal(valorEsperado, leilao.Ganhador.Valor);
         }
 
